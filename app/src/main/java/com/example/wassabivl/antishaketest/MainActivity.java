@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public static final float Shake_Gravity_Threshold = 2.7f; //set a threshold limit not to activate the anitshake due to gravity
     SensorManager sensorManager;
     FileOutputStream outputStream;
+    private int[] imageArray;
+    int x=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         gridLayout.setUseDefaultMargins(false);
         gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
         gridLayout.setRowOrderPreserved(false);
+        //to programatically change the image, create the array
+        imageArray = new int[15];
+        imageArray[0] = R.drawable.image1;
+        imageArray[1] = R.drawable.image2;
+        imageArray[2] = R.drawable.image3;
+        imageArray[3] = R.drawable.image4;
+        imageArray[4] = R.drawable.image5;
+        imageArray[5] = R.drawable.image6;
+        imageArray[6] = R.drawable.image7;
+        imageArray[7] = R.drawable.image8;
+        imageArray[8] = R.drawable.image9;
+        imageArray[9] = R.drawable.image10;
+        imageArray[10] = R.drawable.image11;
+        imageArray[11] = R.drawable.image12;
+        imageArray[12] = R.drawable.image13;
+        imageArray[13] = R.drawable.image14;
+        imageArray[14] = R.drawable.image15;
     }
 
     @Override
@@ -86,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
     public void button1(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("1");}
     public void button2(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("2");}
     public void button3(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("3");}
@@ -94,10 +114,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void button6(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("6");}
     public void button7(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("7");}
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
+    public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
     public void buttonE(View v) throws IOException {
         //need to call to change the picture after this button is pressed
         TextView textView= (TextView) findViewById(R.id.editText);
         textView.append(" /n ");
+        x++;
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageResource(imageArray[x]);
         try {
             outputStream = openFileOutput("antishake.txt", Context.MODE_PRIVATE);
             outputStream.write(Integer.parseInt(textView.getText().toString()));

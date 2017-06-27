@@ -13,15 +13,17 @@
         android:id="@+id/imageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="79dp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/image1"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <EditText
         android:id="@+id/editText"
@@ -34,7 +36,11 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:layout_constraintLeft_creator="1" />
 
     <GridLayout
 
@@ -42,66 +48,133 @@
         android:layout_width="0dp"
         android:layout_height="93dp"
         android:layout_gravity="bottom"
-        android:columnCount="8"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:columnCount="10"
+        android:padding="0dp"
+        android:paddingBottom="0dp"
+        android:paddingEnd="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent">
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        tools:layout_constraintLeft_creator="1">
+
+        <Button
+            android:id="@+id/btn0"
+            android:layout_width="40dp"
+            android:layout_margin="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:onClick="button0"
+            android:padding="0dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
+            android:text="@string/_0" />
 
         <Button
             android:id="@+id/btn1"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
+            android:layout_margin="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:onClick="button1"
+            android:padding="0dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
             android:text="@string/_1" />
 
         <Button
             android:id="@+id/btn2"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button2"
+            android:padding="0dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
             android:text="@string/_2" />
 
         <Button
             android:id="@+id/btn3"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button3"
             android:text="@string/_3" />
 
         <Button
             android:id="@+id/btn4"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button4"
             android:text="@string/_4" />
 
         <Button
             android:id="@+id/btn5"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button5"
             android:text="@string/_5" />
 
         <Button
             android:id="@+id/btn6"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button6"
             android:text="@string/_6" />
 
         <Button
             android:id="@+id/btn7"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button7"
             android:text="@string/_7" />
 
         <Button
             android:id="@+id/btn8"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:onClick="button8"
             android:text="@string/_8" />
 
         <Button
+            android:id="@+id/btn9"
+            android:layout_width="40dp"
+            android:layout_margin="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:onClick="button9"
+            android:padding="0dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
+            android:text="@string/_9" />
+
+        <Button
             android:id="@+id/btnE"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="8"
+            android:layout_columnSpan="10"
             android:layout_gravity="fill"
             android:onClick="buttonE"
             android:text="@string/enter" />
