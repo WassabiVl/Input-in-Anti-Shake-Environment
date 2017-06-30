@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.wassabivl.antishaketest.SecondActivity"
+    >
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/image0" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:inputType="none"
+            app:layout_constraintBottom_toTopOf="@+id/gridLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1" />
+
+        <GridLayout
+
+            android:id="@+id/gridLayout"
+            android:layout_width="202dp"
+            android:layout_height="139dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginStart="6dp"
+            android:columnCount="5"
+            android:padding="0dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingStart="0dp"
+            android:paddingTop="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1">
+
+            <Button
+                android:id="@+id/btn0"
+                android:layout_width="40dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:onClick="button0"
+                android:padding="0dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingStart="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/_0" />
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="40dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:onClick="button1"
+                android:padding="0dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingStart="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/_1" />
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="40dp"
+                android:onClick="button2"
+                android:padding="0dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingStart="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/_2" />
+
+            <Button
+                android:id="@+id/btn3"
+                android:layout_width="40dp"
+                android:onClick="button3"
+                android:text="@string/_3" />
+
+            <Button
+                android:id="@+id/btn4"
+                android:layout_width="40dp"
+                android:onClick="button4"
+                android:text="@string/_4" />
+
+            <Button
+                android:id="@+id/btn5"
+                android:layout_width="40dp"
+                android:onClick="button5"
+                android:text="@string/_5" />
+
+            <Button
+                android:id="@+id/btn6"
+                android:layout_width="40dp"
+                android:onClick="button6"
+                android:text="@string/_6" />
+
+            <Button
+                android:id="@+id/btn7"
+                android:layout_width="40dp"
+                android:onClick="button7"
+                android:text="@string/_7" />
+
+            <Button
+                android:id="@+id/btn8"
+                android:layout_width="40dp"
+                android:onClick="button8"
+                android:text="@string/_8" />
+
+            <Button
+                android:id="@+id/btn9"
+                android:layout_width="40dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:onClick="button9"
+                android:padding="0dp"
+                android:paddingBottom="0dp"
+                android:paddingEnd="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingStart="0dp"
+                android:paddingTop="0dp"
+                android:text="@string/_9" />
+
+            <Button
+                android:id="@+id/btnE"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="5"
+                android:layout_gravity="fill"
+                android:onClick="buttonE"
+                android:text="@string/enter" />
+
+        </GridLayout>
+
+
+</android.support.constraint.ConstraintLayout>

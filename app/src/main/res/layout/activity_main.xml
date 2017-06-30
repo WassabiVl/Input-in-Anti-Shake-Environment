@@ -13,13 +13,13 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/image1"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp" />
+        app:srcCompat="@drawable/image0" />
 
     <EditText
         android:id="@+id/editText"
