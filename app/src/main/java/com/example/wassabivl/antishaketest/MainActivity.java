@@ -5,12 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         //to modify the grid Layout programmatically
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
         gridLayout.setUseDefaultMargins(false);
         gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
@@ -51,12 +53,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         imageArray[12] = R.drawable.image13;
         imageArray[13] = R.drawable.image14;
         imageArray[14] = R.drawable.image15;
+        //disable entery into edittext
+        EditText editText = (EditText) findViewById(R.id.editText);
+        editText.setKeyListener(null);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Sensor sensor = event.sensor;
-        final float x = (int) Math.pow(event.values[0], 2);
+        final float x = (int) Math.pow(event.values[0], 2)*10;
         final float y = (int) Math.pow(event.values[1], 2);
         float z = event.values[2];
 
@@ -73,14 +77,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            int l = (92-Math.round(x));
-                            int u = (50-Math.round(y));
-                            int r = (92+Math.round(x));
-                            int d = (50+Math.round(y));
+                            int l = (-Math.round(x));
+                            int u = (92-Math.round(y));
+                            int r = (Math.round(x));
+                            int d = (92+Math.round(y));
                             ImageView imageView = (ImageView) findViewById(R.id.imageView);
                            // imageView.setPadding(l,u,r,d);
-                            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(imageView.getLayoutParams());
-                            marginParams.setMargins(l, u, r, d);
+                           // marginParams.setMargins(l, u, r, d);
                             ViewGroup.MarginLayoutParams lFooter = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
                             lFooter.bottomMargin = d;
                             lFooter.leftMargin = l;
@@ -126,12 +129,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             outputStream = openFileOutput("antishake.txt", Context.MODE_PRIVATE);
             outputStream.write(Integer.parseInt(textView.getText().toString()));
             outputStream.close();
-//                File root = new File("");
-//                File gpxfile = new File(root, "antishake.txt");
-//                FileWriter writer = new FileWriter(gpxfile);
-//                writer.append(textView.getText().toString());
-//                writer.flush();
-//                writer.close();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         // Register this class as a listener for the accelerometer sensor
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_GAME);
 
     }
     @Override

@@ -11,26 +11,22 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginBottom="79dp"
-        android:layout_marginTop="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/image1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/image1"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1" />
+        android:layout_marginTop="8dp" />
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="43dp"
         android:ems="10"
-        android:inputType="textMultiLine"
+        android:inputType="none"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/gridLayout"
         android:layout_marginRight="8dp"
@@ -45,13 +41,15 @@
     <GridLayout
 
         android:id="@+id/gridLayout"
-        android:layout_width="0dp"
-        android:layout_height="93dp"
+        android:layout_width="202dp"
+        android:layout_height="139dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:columnCount="10"
+        android:layout_marginStart="6dp"
+        android:columnCount="5"
         android:padding="0dp"
         android:paddingBottom="0dp"
         android:paddingEnd="0dp"
@@ -60,13 +58,10 @@
         android:paddingStart="0dp"
         android:paddingTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintRight_creator="1"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        tools:layout_constraintLeft_creator="1">
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1">
 
         <Button
             android:id="@+id/btn0"
@@ -174,7 +169,7 @@
         <Button
             android:id="@+id/btnE"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="10"
+            android:layout_columnSpan="5"
             android:layout_gravity="fill"
             android:onClick="buttonE"
             android:text="@string/enter" />
