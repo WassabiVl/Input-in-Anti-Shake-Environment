@@ -1,10 +1,13 @@
 package com.example.wassabivl.antishaketest;
 
+import android.Manifest;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +18,14 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
     public static final float Shake_Gravity_Threshold = 2.7f; //set a threshold limit not to activate the anitshake due to gravity
     SensorManager sensorManager;
     FileOutputStream outputStream;
@@ -56,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //disable entery into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
     }
 
     @Override
@@ -126,9 +134,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageResource(imageArray[x]);
         try {
-            outputStream = openFileOutput("antishake.txt", Context.MODE_PRIVATE);
-            outputStream.write(Integer.parseInt(textView.getText().toString()));
-            outputStream.close();
+            File root = new File(Environment.getExternalStorageDirectory().toString());
+            File gpxfile = new File(root, "imageAS.txt");
+            FileWriter writer = new FileWriter(gpxfile, true);
+            writer.append(textView.getText().toString());
+            writer.flush();
+            writer.close();
+            textView.setText("");
         }
         catch (Exception e) {
             e.printStackTrace();
