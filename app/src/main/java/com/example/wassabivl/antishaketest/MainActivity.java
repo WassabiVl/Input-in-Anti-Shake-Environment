@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.BufferedWriter;
@@ -19,19 +18,15 @@ import java.io.FileWriter;
 
 public class MainActivity extends AppCompatActivity{
     private int[] imageArray;
-    int x=0;
-    long end = 0;
+    private int x=0;
+    private long end = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //to modify the grid Layout programmatically
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
-        gridLayout.setUseDefaultMargins(false);
-        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-        gridLayout.setRowOrderPreserved(false);
         //to programatically change the image, create the array
-        imageArray = new int[16];
+        imageArray = new int[18];
         imageArray[0] = R.drawable.image0;
         imageArray[1] = R.drawable.image1;
         imageArray[2] = R.drawable.image2;
@@ -48,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
         imageArray[13] = R.drawable.image13;
         imageArray[14] = R.drawable.image14;
         imageArray[15] = R.drawable.image15;
+        imageArray[16] = R.drawable.image16;
         //disable entery into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
@@ -65,13 +61,17 @@ public class MainActivity extends AppCompatActivity{
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
     public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
     public void buttonE(View v)  {
-        //need to call to change the picture after this button is pressed
+        if (x==16){//once the last picture has reached, it will start the second activity
+            Intent intent = new Intent(this, SecondActivity.class);
+            startActivity(intent);
+        }
         TextView textView= (TextView) findViewById(R.id.editText);
         long start = System.currentTimeMillis();
         long change = start - end;
         end= start;
-        x++;
-
+        if (x<17) {
+            x++;
+        }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageResource(imageArray[x]);
         try { //to write to txt file
@@ -89,9 +89,6 @@ public class MainActivity extends AppCompatActivity{
         catch (Exception e) {
             e.printStackTrace();
         }
-        if (x==15){//once the last picture has reached, it will start the second activity
-            Intent intent = new Intent(this, SecondActivity.class);
-            startActivity(intent);
-        }
+
     }
 }

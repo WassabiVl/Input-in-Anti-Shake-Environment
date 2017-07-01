@@ -14,19 +14,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
-    public static final float Shake_Gravity_Threshold = 2.7f; //set a threshold limit not to activate the anitshake due to gravity
-    SensorManager sensorManager;
+    private static final float Shake_Gravity_Threshold = 2.7f; //set a threshold limit not to activate the anitshake due to gravity
+    private SensorManager sensorManager;
     private int[] imageArray;
-    int x=0;
-    long end = 0;
+    private int x=0;
+    private long end = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +35,8 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridLayout);
-        gridLayout.setUseDefaultMargins(false);
-        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-        gridLayout.setRowOrderPreserved(false);
         //to programatically change the image, create the array
-        imageArray = new int[16];
+        imageArray = new int[17];
         imageArray[0] = R.drawable.image0;
         imageArray[1] = R.drawable.image1;
         imageArray[2] = R.drawable.image2;
@@ -57,6 +53,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         imageArray[13] = R.drawable.image13;
         imageArray[14] = R.drawable.image14;
         imageArray[15] = R.drawable.image15;
+        imageArray[16] = R.drawable.image16;
         //disable entery into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
@@ -65,9 +62,12 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        final float x = (int) Math.pow(event.values[0], 2)*10;
-        final float y = (int) Math.pow(event.values[1], 2);
+
         float z = event.values[2];
+        float x = event.values[0];
+        float y = event.values[1];
+        final float x1 = (int) Math.pow(x, 2)*2;
+        final float y1 = (int) Math.pow(y, 2);
         float gx = x / SensorManager.GRAVITY_EARTH;
         float gy = y / SensorManager.GRAVITY_EARTH;
         float gz = z / SensorManager.GRAVITY_EARTH;
@@ -80,19 +80,25 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                int l = (-Math.round(x));
-                                int u = (92-Math.round(y));
-                                int r = (Math.round(x));
-                                int d = (92+Math.round(y));
+                                int l = (50-Math.round(x1));
+                                int u = (50-Math.round(y1));
+                                int r = (50+Math.round(x1));
+                                int d = (50+Math.round(y1));
                                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                                // imageView.setPadding(l,u,r,d);
-                                // marginParams.setMargins(l, u, r, d);
+                                TableLayout gridLayout = (TableLayout) findViewById(R.id.gridLayout);
                                 ViewGroup.MarginLayoutParams lFooter = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
+                                ViewGroup.MarginLayoutParams lFooter2 = (ViewGroup.MarginLayoutParams) gridLayout.getLayoutParams();
                                 lFooter.bottomMargin = d;
                                 lFooter.leftMargin = l;
                                 lFooter.rightMargin = r;
                                 lFooter.topMargin=u;
+                                lFooter2.bottomMargin = d;
+                                lFooter2.leftMargin = l;
+                                lFooter2.rightMargin = r;
+                                lFooter2.topMargin=u;
                                 imageView.setLayoutParams(lFooter);
+                                gridLayout.setLayoutParams(lFooter2);
+
                             }
                         });
                         // sleep to slow down the add of entries

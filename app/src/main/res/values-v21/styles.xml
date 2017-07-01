@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">-7dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">-7dp</item>
+        <item name="android:backgroundTint">@android:color/holo_blue_bright</item>
+
+    </style>
+</resources>
