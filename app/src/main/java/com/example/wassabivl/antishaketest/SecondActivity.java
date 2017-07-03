@@ -109,6 +109,12 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
             //shutdown system so no new entry is registered
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAndRemoveTask ();
+            }
+            else{
+                this.finishAffinity();
+            }
         }
         x1++;
         TextView textView= (TextView) findViewById(R.id.editText);
