@@ -1,7 +1,7 @@
 package com.example.wassabivl.antishaketest;
 
 import android.Manifest;
-import android.content.Intent;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,31 +10,32 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
+
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
-    private static final float Shake_Gravity_Threshold = 2.7f; //set a threshold limit not to activate the anitshake due to gravity
     private SensorManager sensorManager;
     private int[] imageArray;
-    private int x=0;
+    private int x1=0,x2=120,y2=300;
     private long end = 0;
+    float x,y;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_activity);
         //to modify the grid Layout programmatically
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE).get(0);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         //to programatically change the image, create the array
         imageArray = new int[17];
         imageArray[0] = R.drawable.image0;
@@ -62,55 +63,26 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            x =(float) Math.pow(event.values[1], 2)*5;
+            y = (float) Math.pow(event.values[0], 2)*5;
 
-        float z = event.values[2];
-        float x = event.values[0];
-        float y = event.values[1];
-        final float x1 = (int) Math.pow(x, 2)*2;
-        final float y1 = (int) Math.pow(y, 2);
-        float gx = x / SensorManager.GRAVITY_EARTH;
-        float gy = y / SensorManager.GRAVITY_EARTH;
-        float gz = z / SensorManager.GRAVITY_EARTH;
-        float gForce = (float) Math.sqrt(gx*gx+gy*gy+gz*gz);
-        if (gForce>Shake_Gravity_Threshold) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() { // Handles rendering the live sensor data
-                    for (int i = 0; i < 1; i++) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int l = (50-Math.round(x1));
-                                int u = (50-Math.round(y1));
-                                int r = (50+Math.round(x1));
-                                int d = (50+Math.round(y1));
-                                ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                                TableLayout gridLayout = (TableLayout) findViewById(R.id.gridLayout);
-                                ViewGroup.MarginLayoutParams lFooter = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
-                                ViewGroup.MarginLayoutParams lFooter2 = (ViewGroup.MarginLayoutParams) gridLayout.getLayoutParams();
-                                lFooter.bottomMargin = d;
-                                lFooter.leftMargin = l;
-                                lFooter.rightMargin = r;
-                                lFooter.topMargin=u;
-                                lFooter2.bottomMargin = d;
-                                lFooter2.leftMargin = l;
-                                lFooter2.rightMargin = r;
-                                lFooter2.topMargin=u;
-                                imageView.setLayoutParams(lFooter);
-                                gridLayout.setLayoutParams(lFooter2);
-
-                            }
-                        });
-                        // sleep to slow down the add of entries
-                        try {
-                            Thread.sleep(600);
-                        } catch (InterruptedException e) {
-                            Log.e("graph1", e.toString());
-                        }
-                    }
-                }
-            }).start();
         }
+        new Thread(new Runnable() {
+            @Override
+            public void run() { // Handles rendering the live sensor data
+                for (int i = 0; i < 1; i++) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+                            tableLayout.setX(x2+x);
+                            tableLayout.setY(y2-y);
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -128,18 +100,27 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
     public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
     public void buttonE(View v)  {
-        //need to call to change the picture after this button is pressed
+        if (x1==16){//once the last picture has reached, it will Show a notification to close
+            Context context = getApplicationContext();
+            CharSequence text = "This is the end of the Test!";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            //shutdown system so no new entry is registered
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+        }
+        x1++;
         TextView textView= (TextView) findViewById(R.id.editText);
         long start = System.currentTimeMillis();
         long change = start - end;
         end= start;
-        x++;
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageResource(imageArray[x]);
+        imageView.setImageResource(imageArray[x1]);
         try { //to write to txt file
             File root = new File(Environment.getExternalStorageDirectory().toString());
-            File gpxfile = new File(root, "imageAS.txt");
-            FileWriter writer = new FileWriter(gpxfile,true);
+            File saveFile = new File(root, "fullAS.txt");
+            FileWriter writer = new FileWriter(saveFile,true);
             BufferedWriter writer1 = new BufferedWriter(writer);
             String string1 = textView.getText().toString() + "  " + change + " ";
             writer1.append(string1);
@@ -151,18 +132,15 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         catch (Exception e) {
             e.printStackTrace();
         }
-        if (x==16){//once the last picture has reached, it will start the second activity
-            Intent intent = new Intent(this, SecondActivity.class);
-            startActivity(intent);
-        }
+
     }
     @Override
     protected void onResume()
     {
         super.onResume();
         // Register this class as a listener for the accelerometer sensor
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
+                SensorManager.SENSOR_DELAY_FASTEST);
 
     }
     @Override

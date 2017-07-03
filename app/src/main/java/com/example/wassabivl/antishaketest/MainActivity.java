@@ -13,8 +13,7 @@ import android.widget.TextView;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-
-
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity{
     private int[] imageArray;
@@ -24,8 +23,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //to modify the grid Layout programmatically
-        //to programatically change the image, create the array
+        //to programmatically change the image, create the array
         imageArray = new int[18];
         imageArray[0] = R.drawable.image0;
         imageArray[1] = R.drawable.image1;
@@ -44,10 +42,23 @@ public class MainActivity extends AppCompatActivity{
         imageArray[14] = R.drawable.image14;
         imageArray[15] = R.drawable.image15;
         imageArray[16] = R.drawable.image16;
-        //disable entery into edittext
+        //disable entry into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
+        //request permission to save to system storage
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
+        //to create the initial file to save the data
+        File root = new File(Environment.getExternalStorageDirectory().toString());
+        File savefile1 = new File(root, "base.txt");
+        if (!savefile1.exists()) {
+            try {
+                savefile1.createNewFile();
+                File gp = new File (root, "fullAS.txt" );
+                gp.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
@@ -65,19 +76,17 @@ public class MainActivity extends AppCompatActivity{
             Intent intent = new Intent(this, SecondActivity.class);
             startActivity(intent);
         }
+        else {x++;}
         TextView textView= (TextView) findViewById(R.id.editText);
         long start = System.currentTimeMillis();
         long change = start - end;
         end= start;
-        if (x<17) {
-            x++;
-        }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageResource(imageArray[x]);
         try { //to write to txt file
             File root = new File(Environment.getExternalStorageDirectory().toString());
-            File gpxfile = new File(root, "base.txt");
-            FileWriter writer = new FileWriter(gpxfile,true);
+            File savefile = new File(root, "base.txt");
+            FileWriter writer = new FileWriter(savefile,true);
             BufferedWriter writer1 = new BufferedWriter(writer);
             String string1 = textView.getText().toString() + "  " + change + " ";
             writer1.append(string1);
