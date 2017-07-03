@@ -78,7 +78,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         new Thread(new Runnable() {
             @Override
             public void run() { // Handles rendering the live sensor data
-                for (int i = 0; i < 1; i++) {
+                for (int i = 0; i < 2; i++) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -135,7 +135,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
             File saveFile = new File(root, "fullAS.txt");
             FileWriter writer = new FileWriter(saveFile,true);
             BufferedWriter writer1 = new BufferedWriter(writer);
-            String string1 = textView.getText().toString() + "  " + change + " ";
+            String string1 = textView.getText().toString() + "," + change + " ";
             writer1.append(string1);
             writer1.newLine();
             writer1.flush();

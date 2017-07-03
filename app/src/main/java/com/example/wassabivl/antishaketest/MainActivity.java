@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity{
             File savefile = new File(root, "base.txt");
             FileWriter writer = new FileWriter(savefile,true);
             BufferedWriter writer1 = new BufferedWriter(writer);
-            String string1 = textView.getText().toString() + "  " + change + " ";
+            String string1 = textView.getText().toString() + "," + change + " ";
             writer1.append(string1);
             writer1.newLine();
             writer1.flush();
