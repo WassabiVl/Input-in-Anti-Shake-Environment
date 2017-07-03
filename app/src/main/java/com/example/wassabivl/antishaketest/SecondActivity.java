@@ -6,10 +6,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Environment;
+import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +30,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     private int[] imageArray;
     private int x1=0,x2=120,y2=300;
     private long end = 0;
-    float x,y;
+    float x,y, px, py;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,10 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
             x =(float) Math.pow(event.values[1], 2)*5;
             y = (float) Math.pow(event.values[0], 2)*5;
+			px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
+                    getResources().getDisplayMetrics());
+            py = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[0],
+                    getResources().getDisplayMetrics());
 
         }
         new Thread(new Runnable() {
@@ -76,8 +83,8 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
                         @Override
                         public void run() {
                             TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-                            tableLayout.setX(x2+x);
-                            tableLayout.setY(y2-y);
+                            tableLayout.setX(x2+px);
+                            tableLayout.setY(y2-py);
                         }
                     });
                 }
