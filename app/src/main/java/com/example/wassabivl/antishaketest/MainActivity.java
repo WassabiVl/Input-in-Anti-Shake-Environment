@@ -16,16 +16,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity{
-    private int[] imageArray; //programmatically add images to array
-    private int x=0; //to initiate call the image when enter button is pressed
-    private long end = 0; //to begin the timer
+    private int[] imageArray;
+    private int x=0;
+    private long end = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //to programmatically change the image, create the array
         imageArray = new int[18];
-        imageArray[0] = R.drawable.image0;//initial image to start the test
+        imageArray[0] = R.drawable.image0;
         imageArray[1] = R.drawable.image1;
         imageArray[2] = R.drawable.image2;
         imageArray[3] = R.drawable.image3;
@@ -52,8 +52,10 @@ public class MainActivity extends AppCompatActivity{
         File savefile1 = new File(root, "base.txt");
         if (!savefile1.exists()) {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 savefile1.createNewFile();
                 File gp = new File (root, "fullAS.txt" );
+                //noinspection ResultOfMethodCallIgnored
                 gp.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();

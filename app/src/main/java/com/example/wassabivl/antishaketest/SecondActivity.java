@@ -23,23 +23,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
+
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
-    private SensorManager sensorManager; //intiate the SensorEventListener
-    private int[] imageArray; //initiate the array to build the images
-    private int x1=0,x2=120,y2=300;
-    private long end = 0; //begin the timer
-    float x,y, px, py; // these are for the onSensorChanged event
+    private SensorManager sensorManager; //initiate sensor
+    private int[] imageArray;
+    private int x1=0,x2=120,y2=300; //determine the starting position of the tablelayout
+    private long end = 0;//start the timer
+    float px, py;//to calculate the gyroscope movement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_activity);
         //to modify the grid Layout programmatically
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor accelerometer = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE).get(0);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        //to programatically change the image, create the array
+        Sensor gyroScope = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE).get(0);
+        sensorManager.registerListener(this, gyroScope, SensorManager.SENSOR_DELAY_FASTEST);
+        //to programmatically change the image, create the array
         imageArray = new int[17];
-        imageArray[0] = R.drawable.image0; //used to start the test and not get weird results
+        imageArray[0] = R.drawable.image0;
         imageArray[1] = R.drawable.image1;
         imageArray[2] = R.drawable.image2;
         imageArray[3] = R.drawable.image3;
@@ -56,26 +57,26 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         imageArray[14] = R.drawable.image14;
         imageArray[15] = R.drawable.image15;
         imageArray[16] = R.drawable.image16;
-        //disable entery into edittext
+        //disable entry into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
-        //request permission to save to system storage
+        //grant the ability to write to file
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-			      px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
+            //convert from acceleration to pixels, a google library method
+            px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
                     getResources().getDisplayMetrics());
             py = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[0],
                     getResources().getDisplayMetrics());
-
         }
-        new Thread(new Runnable() {//run on a different Thread the anti-shake motion
+        new Thread(new Runnable() {//execute the anti-shake on a different thread
             @Override
             public void run() { // Handles rendering the live sensor data
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 2; i++) { //calculate how much entry are needed before resetting
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -90,7 +91,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {} //not needed
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {} //not used
     public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
     public void button1(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("1");}
     public void button2(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("2");}
@@ -109,10 +110,10 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             //shutdown system so no new entry is registered
-            android.os.Process.killProcess(android.os.Process.myPid());
+            Process.killProcess(Process.myPid());
             System.exit(1);
-		    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    finishAndRemoveTask ();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAndRemoveTask ();
             }
             else{
                 this.finishAffinity();
