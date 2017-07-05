@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AntiShakeTest.iml" filepath="$PROJECT_DIR$/AntiShakeTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Input-in-AntiShake-Enviroment.iml" filepath="$PROJECT_DIR$/Input-in-AntiShake-Enviroment.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

@@ -34,6 +34,7 @@
         </TableRow>
 
         <TableRow>
+<<<<<<< HEAD
           <EditText
               android:id="@+id/editText"
               android:layout_weight="10"
@@ -41,6 +42,20 @@
       </TableRow>
 
         <TableRow>    
+=======
+            <EditText
+                android:id="@+id/editText"
+                android:layout_weight="10"
+                android:inputType="none" />
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:id="@+id/btn0"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:onClick="button0"
+                android:text="@string/_0" />
+>>>>>>> parent of 708994a... changed numpad Layout
 
             <Button
                 android:id="@+id/btn1"
@@ -95,12 +110,15 @@
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button9"
                 android:text="@string/_9" />
+<<<<<<< HEAD
 			      <Button
                 android:id="@+id/btn0"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button0"
                 android:text="@string/_0" />
 
+=======
+>>>>>>> parent of 708994a... changed numpad Layout
         </TableRow>
 
         <TableRow>
