@@ -34,10 +34,13 @@
         </TableRow>
 
         <TableRow>
-            
+          <EditText
+              android:id="@+id/editText"
+              android:layout_weight="10"
+              android:inputType="none" />
+      </TableRow>
 
-        <TableRow>
-            
+        <TableRow>    
 
             <Button
                 android:id="@+id/btn1"
@@ -92,7 +95,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button9"
                 android:text="@string/_9" />
-			<Button
+			      <Button
                 android:id="@+id/btn0"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button0"
@@ -100,9 +103,7 @@
 
         </TableRow>
 
-        <TableRow
-            android:baselineAligned="false"
-            android:gravity="bottom">
+        <TableRow>
 
             <Button
                 android:id="@+id/btnE"

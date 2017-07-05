@@ -19,18 +19,16 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
-
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
-    private SensorManager sensorManager;
-    private int[] imageArray;
+    private SensorManager sensorManager; //intiate the SensorEventListener
+    private int[] imageArray; //initiate the array to build the images
     private int x1=0,x2=120,y2=300;
-    private long end = 0;
-    float x,y, px, py;
+    private long end = 0; //begin the timer
+    float x,y, px, py; // these are for the onSensorChanged event
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +39,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         //to programatically change the image, create the array
         imageArray = new int[17];
-        imageArray[0] = R.drawable.image0;
+        imageArray[0] = R.drawable.image0; //used to start the test and not get weird results
         imageArray[1] = R.drawable.image1;
         imageArray[2] = R.drawable.image2;
         imageArray[3] = R.drawable.image3;
@@ -61,21 +59,20 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         //disable entery into edittext
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setKeyListener(null);
+        //request permission to save to system storage
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            x =(float) Math.pow(event.values[1], 2)*5;
-            y = (float) Math.pow(event.values[0], 2)*5;
-			px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
+			      px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
                     getResources().getDisplayMetrics());
             py = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[0],
                     getResources().getDisplayMetrics());
 
         }
-        new Thread(new Runnable() {
+        new Thread(new Runnable() {//run on a different Thread the anti-shake motion
             @Override
             public void run() { // Handles rendering the live sensor data
                 for (int i = 0; i < 2; i++) {
@@ -93,9 +90,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {} //not needed
     public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
     public void button1(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("1");}
     public void button2(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("2");}
@@ -116,7 +111,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
             //shutdown system so no new entry is registered
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     finishAndRemoveTask ();
             }
             else{
@@ -145,7 +140,6 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     @Override
     protected void onResume()
@@ -154,7 +148,6 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         // Register this class as a listener for the accelerometer sensor
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_FASTEST);
-
     }
     @Override
     protected void onStop()

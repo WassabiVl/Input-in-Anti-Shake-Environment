@@ -35,7 +35,7 @@
         </TableRow>
 
         <TableRow>
-            
+
 
             <Button
                 android:id="@+id/btn1"
@@ -90,7 +90,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button9"
                 android:text="@string/_9" />
-			<Button
+			      <Button
                 android:id="@+id/btn0"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:onClick="button0"
