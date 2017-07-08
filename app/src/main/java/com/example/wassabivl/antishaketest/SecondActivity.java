@@ -12,7 +12,6 @@ import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,10 +25,11 @@ import java.io.FileWriter;
 
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager sensorManager; //initiate sensor
-    private int[] imageArray;
+    private int[] imageArray; //initiat image array to display
     private int x1=0,x2=120,y2=300; //determine the starting position of the tablelayout
-    private long end = 0;//start the timer
-    float px, py;//to calculate the gyroscope movement
+    private long end=0,timeEnd = 0;//start the timer
+    float px, py, r;//to calculate the gyroscope movement, r for radius in float because set position is float
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,27 +62,35 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         editText.setKeyListener(null);
         //grant the ability to write to file
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
+        //calculating the radius based on the table used
+        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+        r= (float) Math.sqrt((0.5*tableLayout.getHeight())*2+(0.5*tableLayout.getWidth())*2);
+
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            //convert from acceleration to pixels, a google library method
-            px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[1],
-                    getResources().getDisplayMetrics());
-            py = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, event.values[0],
-                    getResources().getDisplayMetrics());
+    public void onSensorChanged(SensorEvent event) {//here is to call the callculation needed to implement a direct antishake
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) { //get the gyroscope sensor
+            px = event.values[1];
+            py = event.values[0];
         }
         new Thread(new Runnable() {//execute the anti-shake on a different thread
             @Override
             public void run() { // Handles rendering the live sensor data
-                for (int i = 0; i < 2; i++) { //calculate how much entry are needed before resetting
+                for (int i = 0; i < 1; i++) { //calculate how much entry are needed before resetting
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            //converting from rads/s2 to meters to pixel taking into consideration sec = 1
+                            long timeStart = System.currentTimeMillis();
+                            long timeChange = (long) ((timeStart-timeEnd)/(0.001*0.001));
+                            timeEnd=timeStart;
+                            float px2 = (float) (r*  Math.cos(px))*(timeChange*timeChange);
+                            float py2 = (float) (r*  Math.sin(py))*(timeChange*timeChange);
+                            //set the new position according to the change
                             TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-                            tableLayout.setX(x2+px);
-                            tableLayout.setY(y2-py);
+                            tableLayout.setX(x2+px2);
+                            tableLayout.setY(y2-py2);
                         }
                     });
                 }
@@ -92,6 +100,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {} //not used
+    //to mamaually input the digits each button is called as such
     public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
     public void button1(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("1");}
     public void button2(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("2");}
@@ -102,7 +111,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     public void button7(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("7");}
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
     public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
-    public void buttonE(View v)  {
+    public void buttonE(View v)  {//holds to functions, change th picture and record the data needed
         if (x1==16){//once the last picture has reached, it will Show a notification to close
             Context context = getApplicationContext();
             CharSequence text = "This is the end of the Test!";
@@ -146,7 +155,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     protected void onResume()
     {
         super.onResume();
-        // Register this class as a listener for the accelerometer sensor
+        // Register this class as a listener for the gyroscope sensor
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_FASTEST);
     }
