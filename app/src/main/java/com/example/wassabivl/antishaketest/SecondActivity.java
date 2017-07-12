@@ -67,6 +67,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
         //calculating the radius based on the table used
 //        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+        float heightT = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_PX, 400 , getResources().getDisplayMetrics())/2;
         float widthT = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_PX, 300 , getResources().getDisplayMetrics())/2;
         r= (float) Math.sqrt(heightT*heightT+widthT*widthT);
 
