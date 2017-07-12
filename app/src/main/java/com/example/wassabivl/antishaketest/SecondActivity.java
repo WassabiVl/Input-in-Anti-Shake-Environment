@@ -12,6 +12,7 @@ import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,10 +26,12 @@ import java.io.FileWriter;
 
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager sensorManager; //initiate sensor
-    private int[] imageArray; //initiat image array to display
+    private int[] imageArray; //initial image array to display
     private int x1=0,x2=120,y2=300; //determine the starting position of the tablelayout
     private long end=0,timeEnd = 0;//start the timer
     float px, py, r;//to calculate the gyroscope movement, r for radius in float because set position is float
+    private static final float NS2S = 1.0f / 100.0f; //convert from nano second to second
+    private float timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,44 +66,45 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         //grant the ability to write to file
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
         //calculating the radius based on the table used
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        r= (float) Math.sqrt((0.5*tableLayout.getHeight())*2+(0.5*tableLayout.getWidth())*2);
+//        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+        float widthT = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_PX, 300 , getResources().getDisplayMetrics())/2;
+        r= (float) Math.sqrt(heightT*heightT+widthT*widthT);
 
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {//here is to call the callculation needed to implement a direct antishake
+    public void onSensorChanged(SensorEvent event) {//here is to call the calculation needed to implement a direct antishake
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) { //get the gyroscope sensor
-            px = event.values[1];
-            py = event.values[0];
+            px = (float) Math.sin(event.values[1]);
+            py = (float) Math.sin(event.values[0]);
         }
-        new Thread(new Runnable() {//execute the anti-shake on a different thread
-            @Override
-            public void run() { // Handles rendering the live sensor data
-                for (int i = 0; i < 1; i++) { //calculate how much entry are needed before resetting
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //converting from rads/s2 to meters to pixel taking into consideration sec = 1
-                            long timeStart = System.currentTimeMillis();
-                            long timeChange = (long) ((timeStart-timeEnd)/(0.001*0.001));
-                            timeEnd=timeStart;
-                            float px2 = (float) (r*  Math.cos(px))*(timeChange*timeChange);
-                            float py2 = (float) (r*  Math.sin(py))*(timeChange*timeChange);
-                            //set the new position according to the change
-                            TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-                            tableLayout.setX(x2+px2);
-                            tableLayout.setY(y2-py2);
-                        }
-                    });
-                }
+        //execute the anti-shake on a different thread
+        new Thread(() -> { // Handles rendering the live sensor data
+            for (int i = 0; i < 1; i++) { //calculate how much entry are needed before resetting
+                runOnUiThread(() -> {
+                    //converting from rads/s to meters to pixel taking into consideration sec = 1
+                    long timeStart = System.currentTimeMillis();
+                    long timeChange = (long) ((timeStart-timeEnd)*NS2S);
+//                    long timeChange = (long) ((event.timestamp-timestamp)*NS2S);
+                    timeEnd=timeStart;
+//                    float px2 = (float) (r * (1- Math.cos(px))*(timeChange)); //problem from timechange
+//                    float py2 = (float) (r * (1-Math.cos(py))*(timeChange));
+                    float px2 = r * px;
+                    float py2 = r * py;
+                    //set the new position according to the change
+                    TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+                    EditText editText=(EditText) findViewById(R.id.editText);
+                    editText.setText(String.format("%f", px2));
+                    tableLayout.setX(x2-px2);
+                    tableLayout.setY(y2-py2);
+                });
             }
         }).start();
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {} //not used
-    //to mamaually input the digits each button is called as such
+    //to manually input the digits each button is called as such
     public void button0(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("0");}
     public void button1(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("1");}
     public void button2(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("2");}
