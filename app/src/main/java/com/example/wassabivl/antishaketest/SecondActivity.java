@@ -8,11 +8,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
@@ -20,17 +20,18 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
 
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
+    float px, py, r, tx, ty;//to calculate the gyroscope movement, r for radius in float because set position is float
     private SensorManager sensorManager; //initiate sensor
     private int[] imageArray; //initial image array to display
     private int x1=0; //determine the starting position of the tablelayout
     private long end=0;//start the timer to add timestamp to each entry
-    float px, py, r, tx,ty;//to calculate the gyroscope movement, r for radius in float because set position is float
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +85,8 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         }
         //execute the anti-shake on a different thread
         new Thread(() -> { // Handles rendering the live sensor data
-//            for (int i = 0; i < 2; i++) { //calculate how much entry are needed before resetting
                 runOnUiThread(() -> {
+                    //x2 & y2 sets the initial position of table
                     float x2=120,y2=300,NS2S = 1.0f / 50.0f,px2,py2,tx2,ty2;
                     //converting from rads/s to meters to pixel taking into consideration sec = 1
 //                    long timeStart = System.currentTimeMillis();
@@ -99,12 +100,16 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
                     ty2 = r* (1-ty)*NS2S;
                     //set the new position according to the change
                     TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-//                    EditText editText=(EditText) findViewById(R.id.editText);
-//                    editText.setText(String.format("%f", px2)); //this was intended for testing purposes
-                    tableLayout.setX(x2-px2+tx2);
+                    /*this was intended for testing purposes to view the values
+                            EditText editText=(EditText) findViewById(R.id.editText);
+                            editText.setText(String.format("%f", px2)); */
+
+                    /*to manipulate the table, the calculated values adjust the initial position of the table
+                    in opposite direct of the movement
+                    */
+                    tableLayout.setX(x2 - px2 + tx2);
                     tableLayout.setY(y2-py2+ty2);
                 });
-//            }
         }).start();
     }
 
@@ -121,7 +126,12 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
     public void button7(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("7");}
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
     public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
-    public void buttonE(View v)  {//holds to functions, change th picture and record the data needed
+
+    public void buttonE(View v) {
+        /*the enter button has two primary functions
+        * save the data recorded in the editText to a file with a timestamp of how long
+        * the user needed to input it.Then it changes the picture with a new number on it
+        * and after the final number has been put, it shuts down th application*/
         if (x1==16){//once the last picture has reached, it will Show a notification to close
             Context context = getApplicationContext();
             CharSequence text = "This is the end of the Test!";
@@ -138,7 +148,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
                 this.finishAffinity();
             }
         }
-        x1++;
+        x1++;//to call upon the index f the image array
         TextView textView= (TextView) findViewById(R.id.editText);
         long start = System.currentTimeMillis();
         long change = start - end;
