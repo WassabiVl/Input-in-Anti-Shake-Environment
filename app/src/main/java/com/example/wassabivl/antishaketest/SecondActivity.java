@@ -2,6 +2,7 @@ package com.example.wassabivl.antishaketest;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,7 +13,7 @@ import android.os.Process;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,11 +28,9 @@ import java.io.FileWriter;
 public class SecondActivity extends AppCompatActivity implements SensorEventListener{
     private SensorManager sensorManager; //initiate sensor
     private int[] imageArray; //initial image array to display
-    private int x1=0,x2=120,y2=300; //determine the starting position of the tablelayout
-    private long end=0,timeEnd = 0;//start the timer
-    float px, py, r;//to calculate the gyroscope movement, r for radius in float because set position is float
-    private static final float NS2S = 1.0f / 100.0f; //convert from nano second to second
-    private float timestamp;
+    private int x1=0; //determine the starting position of the tablelayout
+    private long end=0;//start the timer to add timestamp to each entry
+    float px, py, r, tx,ty;//to calculate the gyroscope movement, r for radius in float because set position is float
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         //to modify the grid Layout programmatically
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor gyroScope = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE).get(0);
-        sensorManager.registerListener(this, gyroScope, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gyroScope, SensorManager.SENSOR_DELAY_GAME);
         //to programmatically change the image, create the array
         imageArray = new int[17];
         imageArray[0] = R.drawable.image0;
@@ -66,40 +65,46 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         //grant the ability to write to file
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2909);
         //calculating the radius based on the table used
-//        TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        float heightT = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_PX, 400 , getResources().getDisplayMetrics())/2;
-        float widthT = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_PX, 300 , getResources().getDisplayMetrics())/2;
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        //to use the whole display as a radius or the angular motion
+        float widthT = size.x/2;
+        float heightT = size.y/2;
         r= (float) Math.sqrt(heightT*heightT+widthT*widthT);
-
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {//here is to call the calculation needed to implement a direct antishake
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) { //get the gyroscope sensor
-            px = (float) Math.sin(event.values[1]);
-            py = (float) Math.sin(event.values[0]);
+            px = (float) Math.sin(event.values[1]); //directly convert to the x coordinate from roll
+            py = (float) Math.sin(event.values[0]); //directly convert to the Y coordinate from pitch
+            tx = (float) Math.sin(event.values[2]); //directly convert to the x-coordinate of yaw
+            ty = (float) Math.cos(event.values[2]);//indirectly convert to the x-coordinate of yaw
         }
         //execute the anti-shake on a different thread
         new Thread(() -> { // Handles rendering the live sensor data
-            for (int i = 0; i < 1; i++) { //calculate how much entry are needed before resetting
+//            for (int i = 0; i < 2; i++) { //calculate how much entry are needed before resetting
                 runOnUiThread(() -> {
+                    float x2=120,y2=300,NS2S = 1.0f / 50.0f,px2,py2,tx2,ty2;
                     //converting from rads/s to meters to pixel taking into consideration sec = 1
-                    long timeStart = System.currentTimeMillis();
-                    long timeChange = (long) ((timeStart-timeEnd)*NS2S);
+//                    long timeStart = System.currentTimeMillis();
+//                    long timeChange = (long) ((timeStart-timeEnd)*NS2S);
 //                    long timeChange = (long) ((event.timestamp-timestamp)*NS2S);
-                    timeEnd=timeStart;
-//                    float px2 = (float) (r * (1- Math.cos(px))*(timeChange)); //problem from timechange
-//                    float py2 = (float) (r * (1-Math.cos(py))*(timeChange));
-                    float px2 = r * px;
-                    float py2 = r * py;
+//                    timeEnd=timeStart;
+                    //to get the distance moved in pixels
+                    px2 = r * px*NS2S;
+                    py2 = r * py*NS2S;
+                    tx2 = r* tx*NS2S;
+                    ty2 = r* (1-ty)*NS2S;
                     //set the new position according to the change
                     TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-                    EditText editText=(EditText) findViewById(R.id.editText);
-                    editText.setText(String.format("%f", px2));
-                    tableLayout.setX(x2-px2);
-                    tableLayout.setY(y2-py2);
+//                    EditText editText=(EditText) findViewById(R.id.editText);
+//                    editText.setText(String.format("%f", px2)); //this was intended for testing purposes
+                    tableLayout.setX(x2-px2+tx2);
+                    tableLayout.setY(y2-py2+ty2);
                 });
-            }
+//            }
         }).start();
     }
 
@@ -162,7 +167,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         super.onResume();
         // Register this class as a listener for the gyroscope sensor
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
-                SensorManager.SENSOR_DELAY_FASTEST);
+                SensorManager.SENSOR_DELAY_GAME);
     }
     @Override
     protected void onStop()
