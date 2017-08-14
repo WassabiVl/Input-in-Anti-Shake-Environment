@@ -39,6 +39,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         setContentView(R.layout.second_activity);
         //to modify the grid Layout programmatically
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         Sensor gyroScope = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE).get(0);
         sensorManager.registerListener(this, gyroScope, SensorManager.SENSOR_DELAY_GAME);
         //to programmatically change the image, create the array
@@ -81,23 +82,18 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
             px = (float) Math.sin(event.values[1]); //directly convert to the x coordinate from roll
             py = (float) Math.sin(event.values[0]); //directly convert to the Y coordinate from pitch
             tx = (float) Math.sin(event.values[2]); //directly convert to the x-coordinate of yaw
-            ty = (float) Math.cos(event.values[2]);//indirectly convert to the x-coordinate of yaw
+            ty = (float) (r - Math.cos(event.values[2]));//directly convert to the x-coordinate of yaw
         }
         //execute the anti-shake on a different thread
         new Thread(() -> { // Handles rendering the live sensor data
                 runOnUiThread(() -> {
                     //x2 & y2 sets the initial position of table
                     float x2=120,y2=300,NS2S = 1.0f / 50.0f,px2,py2,tx2,ty2;
-                    //converting from rads/s to meters to pixel taking into consideration sec = 1
-//                    long timeStart = System.currentTimeMillis();
-//                    long timeChange = (long) ((timeStart-timeEnd)*NS2S);
-//                    long timeChange = (long) ((event.timestamp-timestamp)*NS2S);
-//                    timeEnd=timeStart;
                     //to get the distance moved in pixels
                     px2 = r * px*NS2S;
                     py2 = r * py*NS2S;
-                    tx2 = r* tx*NS2S;
-                    ty2 = r* (1-ty)*NS2S;
+                    tx2 = r * tx*NS2S;
+                    ty2 = r * ty*NS2S;
                     //set the new position according to the change
                     TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
                     /*this was intended for testing purposes to view the values
@@ -156,8 +152,8 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageResource(imageArray[x1]);
         try { //to write to txt file
-            File root = new File(Environment.getExternalStorageDirectory().toString());
-            File saveFile = new File(root, "fullAS.txt");
+            File root = new File(Environment.getExternalStorageDirectory().toString()); //gets the location of the storage
+            File saveFile = new File(root, "fullAS.txt"); //points to the txt file
             FileWriter writer = new FileWriter(saveFile,true);
             BufferedWriter writer1 = new BufferedWriter(writer);
             String string1 = textView.getText().toString() + "," + change + " ";

@@ -16,9 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity{
-    private int[] imageArray;
-    private int x=0;
-    private long end = 0;
+    private int[] imageArray; //to hold the array
+    private int x=0; // counter that acts as an index for the imageArrray, and a call for the end of the activity
+    private long end = 0; // used in the claculation of the time needed for each input
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +50,11 @@ public class MainActivity extends AppCompatActivity{
         //to create the initial file to save the data
         File root = new File(Environment.getExternalStorageDirectory().toString());
         File savefile1 = new File(root, "base.txt");
-        if (!savefile1.exists()) {
+        if (!savefile1.exists()) { //this is to check if the tct files exist on the phone
             try {
                 //noinspection ResultOfMethodCallIgnored
                 savefile1.createNewFile();
                 File gp = new File (root, "fullAS.txt" );
-                //noinspection ResultOfMethodCallIgnored
                 gp.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,6 +73,10 @@ public class MainActivity extends AppCompatActivity{
     public void button8(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("8");}
     public void button9(View v){TextView textView= (TextView) findViewById(R.id.editText);textView.append("9");}
     public void buttonE(View v)  {
+        /*the enter button has two primary functions
+        * save the data recorded in the editText to a file with a timestamp of how long
+        * the user needed to input it.Then it changes the picture with a new number on it
+        * and after the final number has been put, it shuts down th application*/
         if (x==16){//once the last picture has reached, it will start the second activity
             Intent intent = new Intent(this, SecondActivity.class);
             startActivity(intent);
