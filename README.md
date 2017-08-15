@@ -8,4 +8,5 @@ The test is designed to test the increase in error rate by having two tests:
   Test 2 (Second activity): a full screen display stablizer (anti-shake) 
   
   ### for more information, check the Wiki page
+  https://github.com/WassabiVl/Input-in-Anti-Shake-Environment/wiki
 
