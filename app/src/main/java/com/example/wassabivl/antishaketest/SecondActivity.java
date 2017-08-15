@@ -88,7 +88,7 @@ public class SecondActivity extends AppCompatActivity implements SensorEventList
         new Thread(() -> { // Handles rendering the live sensor data
                 runOnUiThread(() -> {
                     //x2 & y2 sets the initial position of table
-                    float x2=120,y2=300,NS2S = 1.0f / 50.0f,px2,py2,tx2,ty2;
+                    float x2=120,y2=300,NS2S = 1.0f / 50.0f,px2,py2,tx2,ty2;//NS2S recommended by google to be .0001 but doesn't even move
                     //to get the distance moved in pixels
                     px2 = r * px*NS2S;
                     py2 = r * py*NS2S;
